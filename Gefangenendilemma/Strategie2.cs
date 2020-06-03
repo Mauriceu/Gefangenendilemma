@@ -9,7 +9,7 @@ namespace Gefangenendilemma
     {
         public override string Name()
         {
-            return "Bitte anpassen";
+            return "Testeroni";
         }
 
         public override string Autor()
