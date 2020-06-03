@@ -11,8 +11,6 @@ namespace Gefangenendilemma
     {
         public int schwere;
         public int runden;
-        public int enemyP; 
-        public int ownP; 
         public List<int> enemyReactions = new List<int>();
         public List<int> ownReactions = new List<int>();
 
