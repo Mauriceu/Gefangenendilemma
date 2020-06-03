@@ -9,12 +9,12 @@ namespace Gefangenendilemma
     {
         public override string Name()
         {
-            return "Bitte anpassen";
+            return "Anti-Verrat";
         }
 
         public override string Autor()
         {
-            return "Bitte anpassen";
+            return "An Duc Hoang";
         }
 
         public override void Start(int runde, int schwere)
