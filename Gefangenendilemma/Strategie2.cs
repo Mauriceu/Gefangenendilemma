@@ -14,7 +14,7 @@ namespace Gefangenendilemma
 
         public override string Autor()
         {
-            return "Bitte anpassen";
+            return "Hikmet Özer";
         }
 
         public override void Start(int runde, int schwere)
