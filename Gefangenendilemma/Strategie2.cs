@@ -7,6 +7,9 @@ namespace Gefangenendilemma
 
     public class Strategie2 : BasisStrategie
     {
+        private int schwere;
+        private int runden;
+
         public override string Name()
         {
             return "Anti-Groll-und-Verrate-Immer";
