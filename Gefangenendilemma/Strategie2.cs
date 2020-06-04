@@ -20,9 +20,10 @@ namespace Gefangenendilemma
             return "Hikmet Özer";
         }
 
-        public override void Start(int runde, int schwere)
+        public override void Start(int runden, int schwere)
         {
-            //Vorbereitungen für Start
+            this.schwere = schwere;
+            this.runden = runden;
         }
 
         public override int Verhoer(int letzteReaktion)
