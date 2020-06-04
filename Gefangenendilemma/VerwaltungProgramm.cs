@@ -31,6 +31,7 @@ namespace Gefangenendilemma
                 Console.WriteLine("Willkommen zum Gefangenendilemma");
                 Console.WriteLine("0 - Verhör zwischen 2 Gefangene");
                 Console.WriteLine("1 - Automatisches Verhör zwischen 2 Strategien.");
+                Console.WriteLine("2 - Mensch vs Computer.");
                 Console.WriteLine("X - Beenden");
 
                 // Eingabe
@@ -46,7 +47,8 @@ namespace Gefangenendilemma
                     case "1":
                         AutomatischerVerhoerer();
                         break;
-                    case "X":
+                    case "2":
+                        //Benutzer gegen Computer
                         break;
                     default:
                         Console.WriteLine($"Eingabe {eingabe} nicht erkannt.");
