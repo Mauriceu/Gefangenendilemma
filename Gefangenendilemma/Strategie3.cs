@@ -7,6 +7,7 @@ namespace Gefangenendilemma
     /// </summary>
     public class Strategie3 : BasisStrategie
     {
+        private bool antiVerrat;
         public override string Name()
         {
             return "Anti-Verrat";
@@ -19,14 +20,12 @@ namespace Gefangenendilemma
 
         public override void Start(int runde, int schwere)
         {
-            //Vorbereitungen für Start
+            antiVerrat = false;
         }
 
         public override int Verhoer(int letzteReaktion)
         {
-            //Strategie hier ergänzen
-
-            return Verrat;
+            
         }
     }
 }

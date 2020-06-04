@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Gefangenendilemma.Basis;
+using System;
 using System.Collections.Generic;
-using Gefangenendilemma.Basis;
 
 namespace Gefangenendilemma
 {
@@ -10,7 +10,7 @@ namespace Gefangenendilemma
         /// Diese Liste enthält alle Gefangene/Strategien
         /// </summary>
         private static List<BasisStrategie> _strategien;
-        
+
         static void Main(string[] args)
         {
             //bekannt machen der ganzen strategien
@@ -20,7 +20,7 @@ namespace Gefangenendilemma
             _strategien.Add(new Strategie1());
             _strategien.Add(new Strategie2());
             _strategien.Add(new Strategie3());
-            
+
             string eingabe = null;
             do
             {
@@ -28,7 +28,7 @@ namespace Gefangenendilemma
                 Console.WriteLine("Willkommen zum Gefangenendilemma");
                 Console.WriteLine("0 - Verhör zwischen 2 Gefangene");
                 Console.WriteLine("X - Beenden");
-                
+
                 // Eingabe
                 Console.Write("Treffen Sie ihre Option: ");
                 eingabe = Console.ReadLine();
@@ -53,7 +53,8 @@ namespace Gefangenendilemma
         {
             int st1, st2;
             int runde, schwere;
-            
+
+            ///for loop durch die Liste der Strategien und Auswahl zwischen den Strategien
             Console.WriteLine("Willkommen zum Verhör zwischen 2 Strategien");
             for (int i = 0; i < _strategien.Count; i++)
             {
@@ -64,7 +65,7 @@ namespace Gefangenendilemma
             st2 = VerwaltungKram.EingabeZahlMinMax("Wählen Sie die 2. Strategie", 0, _strategien.Count);
             runde = VerwaltungKram.EingabeZahlMinMax("Wie viele Runden sollen diese verhört werden?", 1, 101);
             schwere = VerwaltungKram.EingabeZahlMinMax("Wie schwer sind die Verstöße? (2=schwer)", 2, 3);
-            
+
             Verhoer(st1, st2, runde, schwere);
         }
 
@@ -87,9 +88,9 @@ namespace Gefangenendilemma
             //beide Strategien über den Start informieren (Also es wird die Startmethode aufgerufen)
             strategie1.Start(runde, schwere);
             strategie2.Start(runde, schwere);
-            
+
             Console.WriteLine($"Verhör zwischen {strategie1.Name()} und {strategie2.Name()} für {runde} Runden.");
-            
+
             //start
             for (int i = 0; i < runde; i++)
             {
@@ -100,26 +101,26 @@ namespace Gefangenendilemma
                 //punkte berechnen
                 switch (schwere)
                 {
-                  case 0:
-                      Leicht(aktReaktion1, aktReaktion2, ref punkte1, ref punkte2);
-                      break;
-                  case 1: 
-                      Mittel(aktReaktion1, aktReaktion2, ref punkte1, ref punkte2);
-                      break;
-                  case 2:
-                      Schwer(aktReaktion1, aktReaktion2, ref punkte1, ref punkte2);
-                      break;
+                    case 0:
+                        Leicht(aktReaktion1, aktReaktion2, ref punkte1, ref punkte2);
+                        break;
+                    case 1:
+                        Mittel(aktReaktion1, aktReaktion2, ref punkte1, ref punkte2);
+                        break;
+                    case 2:
+                        Schwer(aktReaktion1, aktReaktion2, ref punkte1, ref punkte2);
+                        break;
                 }
 
                 //reaktion für den nächsten durchlauf merken
                 reaktion1 = aktReaktion1;
                 reaktion2 = aktReaktion2;
             }
-            
+
             //ausgabe
             Console.WriteLine($"{strategie1.Name()} hat {punkte1} Punkte erhalten.");
             Console.WriteLine($"{strategie2.Name()} hat {punkte2} Punkte erhalten.");
-            Console.WriteLine("Somit hat {0} gewonnen.",punkte1 < punkte2 ? strategie1.Name(): strategie2.Name());
+            Console.WriteLine("Somit hat {0} gewonnen.", punkte1 < punkte2 ? strategie1.Name() : strategie2.Name());
         }
 
         /// <summary>
@@ -135,13 +136,13 @@ namespace Gefangenendilemma
             {
                 punkte1 += 3;
                 punkte2 += 3;
-            } 
+            }
             else
             if (aktReaktion1 == BasisStrategie.Verrat && aktReaktion2 == BasisStrategie.Kooperieren)
             {
                 punkte1 += 0;
                 punkte2 += 9;
-            } 
+            }
             else
             if (aktReaktion1 == BasisStrategie.Kooperieren && aktReaktion2 == BasisStrategie.Verrat)
             {
@@ -161,13 +162,13 @@ namespace Gefangenendilemma
             {
                 punkte1 += 10;
                 punkte2 += 10;
-            } 
+            }
             else
             if (aktReaktion1 == BasisStrategie.Verrat && aktReaktion2 == BasisStrategie.Kooperieren)
             {
                 punkte1 += 0;
                 punkte2 += 8;
-            } 
+            }
             else
             if (aktReaktion1 == BasisStrategie.Kooperieren && aktReaktion2 == BasisStrategie.Verrat)
             {
@@ -187,13 +188,13 @@ namespace Gefangenendilemma
             {
                 punkte1 += 4;
                 punkte2 += 4;
-            } 
+            }
             else
             if (aktReaktion1 == BasisStrategie.Verrat && aktReaktion2 == BasisStrategie.Kooperieren)
             {
                 punkte1 += 0;
                 punkte2 += 10;
-            } 
+            }
             else
             if (aktReaktion1 == BasisStrategie.Kooperieren && aktReaktion2 == BasisStrategie.Verrat)
             {
