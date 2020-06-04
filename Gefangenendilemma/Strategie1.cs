@@ -10,14 +10,14 @@ namespace Gefangenendilemma
 
     public class Strategie1 : BasisStrategie
     {
-        public int runden;
-        public int schwere;
-        public List<int> enemyReactions = new List<int>();
-        public List<int> ownReactions = new List<int>();
+        private int runden;
+        private int schwere;
+        private List<int> enemyReactions = new List<int>();
+        private List<int> ownReactions = new List<int>();
 
         public override string Name()
         {
-            return "TFT";
+            return "Reaktives TFT";
         }
 
         public override string Autor()
@@ -33,7 +33,6 @@ namespace Gefangenendilemma
             
             enemyReactions = new List<int>();
             ownReactions = new List<int>();
-            
         }
 
         public override int Verhoer(int letzteReaktion)
@@ -53,36 +52,30 @@ namespace Gefangenendilemma
                     return Verrat;
                 }
                 
-                if (letzteReaktion == Kooperieren)
+                if (letzteReaktion == Verrat)
                 {
-                    //eigene Reaktionen werden größtenteils nicht imitiert
-                    if (enemyReactions.Except(ownReactions).ToList().Count < 5 && runden > 5 )
-                    {
-                        ownReactions.Add(Verrat);
-                        return Verrat;
-                    }
-                    
+                    ownReactions.Add(Verrat);
+                    return Verrat;
+                }
+
+                if (enemyReactions.FindAll(item => item == Verrat).Count == 0 && enemyReactions.Count > 1)
+                {
                     ownReactions.Add(Kooperieren);
                     return Kooperieren;
                 }
                 
                 ownReactions.Add(Verrat);
                 return Verrat;
-                
             }
 
-            var unterschiede = enemyReactions.Except(ownReactions).ToList();
-
-            if (unterschiede.Count < 5 && runden == 100 && enemyReactions.Count > 30)
+            if (ownReactions.Count == 0)
             {
-                Console.WriteLine("testorino brudi");
                 ownReactions.Add(Verrat);
-                return Kooperieren;
-            } 
+                return Verrat;
+            }
+            ownReactions.Add(Kooperieren);
+            return Kooperieren;
 
-            ownReactions.Add(Verrat);
-            return Verrat;
-            
         }
         
     }

@@ -9,7 +9,6 @@ namespace Gefangenendilemma.Basis
 {
     public class VerwaltungKram
     {
-
         /// <summary>
         /// Liest eine Zahl ein
         /// </summary>

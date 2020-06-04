@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
 using Gefangenendilemma.Basis;
 
 namespace Gefangenendilemma
@@ -12,6 +14,7 @@ namespace Gefangenendilemma
         private static List<BasisStrategie> _strategien;
 
         private static int punkte1, punkte2, gesamtPunkte1, gesamtPunkte2;
+        private static bool automatischesVerhoer = false;
 
         static void Main(string[] args)
         {
@@ -30,6 +33,8 @@ namespace Gefangenendilemma
                 Console.WriteLine("Willkommen zum Gefangenendilemma");
                 Console.WriteLine("0 - Verhör zwischen 2 Gefangene");
                 Console.WriteLine("1 - Automatisches Verhör zwischen 2 Strategien.");
+                Console.WriteLine("2 - Mensch vs Computer.");
+                Console.WriteLine("3 - Turnier");
                 Console.WriteLine("X - Beenden");
 
                 // Eingabe
@@ -45,7 +50,11 @@ namespace Gefangenendilemma
                     case "1":
                         AutomatischerVerhoerer();
                         break;
-                    case "X":
+                    case "2":
+                        MenschGegenMaschine();
+                        break;
+                    case "3":
+                        Turnier();
                         break;
                     default:
                         Console.WriteLine($"Eingabe {eingabe} nicht erkannt.");
@@ -53,12 +62,14 @@ namespace Gefangenendilemma
                 }
             } while (!"x".Equals(eingabe?.ToLower()));
         }
-
+        
         static void Gefangene2()
         {
             int st1, st2;
             int runde, schwere;
 
+            automatischesVerhoer = false;
+            
             Console.WriteLine("Willkommen zum Verhör zwischen 2 Strategien");
             for (int i = 0; i < _strategien.Count; i++)
             {
@@ -69,7 +80,7 @@ namespace Gefangenendilemma
             st1 = VerwaltungKram.EingabeZahlMinMax("Wählen Sie die 1. Strategie", 0, _strategien.Count);
             st2 = VerwaltungKram.EingabeZahlMinMax("Wählen Sie die 2. Strategie", 0, _strategien.Count);
             runde = VerwaltungKram.EingabeZahlMinMax("Wie viele Runden sollen diese verhört werden?", 1, 101);
-            schwere = VerwaltungKram.EingabeZahlMinMax("Wie schwer sind die Verstöße? (2=schwer)", 0, 3);
+            schwere = VerwaltungKram.EingabeZahlMinMax("Wie schwer sind die Verstöße? (0=leicht, 1=mittel, 2=schwer)", 0, 3);
 
             Verhoer(st1, st2, runde, schwere);
         }
@@ -93,7 +104,7 @@ namespace Gefangenendilemma
             strategie1.Start(runde, schwere);
             strategie2.Start(runde, schwere);
             
-            Console.WriteLine($"Verhör zwischen {strategie1.Name()} und {strategie2.Name()} für {runde} Runden.");
+            Console.WriteLine($"Verhör zwischen '{strategie1.Name()}' und '{strategie2.Name()}' für {runde} Runden und Schwierigkeit {schwere}.");
 
 
             //start
@@ -123,10 +134,29 @@ namespace Gefangenendilemma
             }
 
             //ausgabe
-            Console.WriteLine();
-            Console.WriteLine($"{strategie1.Name()} hat {punkte1} Punkte erhalten.");
-            Console.WriteLine($"{strategie2.Name()} hat {punkte2} Punkte erhalten.");
-            Console.WriteLine("Somit hat {0} gewonnen.", punkte1 < punkte2 ? strategie1.Name() : strategie2.Name());
+            if (automatischesVerhoer)
+            {
+                switch (runde)
+                {
+                    case 5:
+                        punkte1 *= 20;
+                        punkte2 *= 20;
+                        break;
+                    case 25:
+                        punkte1 *= 4;
+                        punkte2 *= 4;
+                        break;
+                }
+            }
+            else
+            {
+                Console.WriteLine();
+                Console.WriteLine($"{strategie1.Name()} hat {punkte1} Punkte erhalten.");
+                Console.WriteLine($"{strategie2.Name()} hat {punkte2} Punkte erhalten.");
+                Console.WriteLine("Somit hat {0} gewonnen.", punkte1 < punkte2 ? strategie1.Name() : strategie2.Name());
+            }
+            
+
            
         }
 
@@ -209,11 +239,134 @@ namespace Gefangenendilemma
             }
         }
 
-        static void AutomatischerVerhoerer()
+
+        static void Turnier()
         {
-            int st1, st2;
+            Console.WriteLine();
+            Console.WriteLine("Turnier beginnt!");
+            Console.WriteLine();
+
+            automatischesVerhoer = true;
+            
+            //0=leicht, 1=mittel, 2=schwer
             int schwere = 0;
 
+            int st1 = 0, st2 = 0;
+
+
+            
+            var punkte = new Dictionary<string, int>();
+            foreach (var str in _strategien)
+            {
+                punkte.Add(str.Name(), 0);
+            }
+            
+            
+            for (int x = 0; x < _strategien.Count; x++)
+            {
+                st1 = x;
+
+                for (int y = 1; y < _strategien.Count - x; y++)
+                {
+                    st2 = y + x;
+                    schwere = 0;
+
+                    //für jeden Schwierigkeitsgrad 1 Durchlauf
+                    for (int a = 0; a < 3; a++)
+                    {
+                        //beginnt mit 5 Runden
+                        int runde = 5;
+
+                        //jewils 1 Durchlauf für 5, 25, 100 Runden
+                        for (int b = 0; b < 3; b++)
+                        {
+                            //setzt Punkte zurück
+                            punkte1 = 0;
+                            punkte2 = 0;
+
+                            string strategie1 = _strategien[st1].Name();
+                            string strategie2 = _strategien[st2].Name();
+
+                            //startet das Verhoer
+                            Verhoer(st1, st2, runde, schwere);
+                            
+                            var strat1 = from val in punkte where val.Key == "strategie1" select val.Value;
+                            var strat2 = from val in punkte where val.Key == "strategie2" select val.Value;
+                            
+                            
+                            foreach( var strat in strat1 )Console.WriteLine("strat1 " + strat);
+                            
+                            
+                            switch (runde)
+                            {
+                                //beim ersten Durchlauf (5R) werden die erreichten Punkte mal 20 gerechnet und auf die gesamtPunktzahl addiert
+                                case 5:
+                                    runde = 25;
+                                    punkte[strategie1] += punkte1;
+                                    punkte[strategie2] += punkte2;
+                                    break;
+                                //beim zweiten Durchlauf (25R) werden die erreichten Punkte mal 4 gerechnet und auf die gesamtPunktzahl addiert
+                                case 25:
+                                    runde = 100;
+                                    punkte[strategie1] += punkte1;
+                                    punkte[strategie2] += punkte2;
+                                    break;
+                                //beim dritten Durchlauf werden die erreichten Punkte auf die Gesamtpunktzahl addiert
+                                case 100:
+                                    runde = 0;
+                                    punkte[strategie1] += punkte1;
+                                    punkte[strategie2] += punkte2;
+                                    
+                                    Console.WriteLine($"{strategie1} hat {punkte1} Punkte, {strategie2} hat {punkte2} Punkte erreicht.");
+                                    Console.WriteLine("Somit hat {0} gewonnen.", punkte1 < punkte2 ? strategie1 : strategie2);
+                                    Console.WriteLine("*********************************************************************************");
+                                    break;
+                            }
+                        }
+                        schwere++;
+                    }
+                }
+            }
+            
+            Console.WriteLine("---------------------------------------------------");
+            //sortiert die Punkte in aufsteigender Reihenfolge
+            var sortedList = 
+                from pair in punkte
+                orderby pair.Value
+                select pair;
+
+            //managing
+            bool first = true;
+            string best = "";
+            
+            foreach (var value in sortedList)
+            {
+                //wenn es der erste eintrag ist (der kleinste, weil die liste sortiert wurde)
+                if (first)
+                {
+                    first = false;
+                    //speichere den strategie-namen
+                    best = value.Key;
+                }
+                Console.WriteLine("{0} hat insgesamt {1} Punkte erhalten.", value.Key, value.Value);
+            }
+            
+            Console.WriteLine("-------------------------------------------------------");
+            Console.WriteLine($"{best} hat gewonnen");
+            Console.WriteLine("-------------------------------------------------------");
+        }
+        
+
+        static void AutomatischerVerhoerer()
+        {
+            //0=leicht, 1=mittel, 2=schwer
+            int schwere = 0;
+
+            automatischesVerhoer = true;
+
+            gesamtPunkte1 = 0;
+            gesamtPunkte2 = 0;
+            
             Console.WriteLine("Willkommen zum Verhör zwischen 2 Strategien");
             for (int i = 0; i < _strategien.Count; i++)
             {
@@ -221,38 +374,48 @@ namespace Gefangenendilemma
             }
 
             Console.WriteLine("Wählen Sie ihre 2 Gefangene:");
-            st1 = VerwaltungKram.EingabeZahlMinMax("Wählen Sie die 1. Strategie", 0, _strategien.Count);
-            st2 = VerwaltungKram.EingabeZahlMinMax("Wählen Sie die 2. Strategie", 0, _strategien.Count);
+            int st1 = VerwaltungKram.EingabeZahlMinMax("Wählen Sie die 1. Strategie", 0, _strategien.Count);
+            int st2 = VerwaltungKram.EingabeZahlMinMax("Wählen Sie die 2. Strategie", 0, _strategien.Count);
 
+            //für jeden Schwierigkeitsgrad 1 Durchlauf
             for (int a = 0; a < 3; a++)
             {
+                //beginnt mit 5 Runden
                 int runde = 5;
                 
-                    for (int b = 0; b < 3; b++)
-                    {
-                        punkte1 = 0;
-                        punkte2 = 0;
-                        Verhoer(st1, st2, runde, schwere);
+                //jewils 1 Durchlauf für 5, 25, 100 Runden
+                for (int b = 0; b < 3; b++)
+                {
+                    //setzt Punkte zurück
+                    punkte1 = 0;
+                    punkte2 = 0;
+                    
+                    //startet das Verhoer
+                    Verhoer(st1, st2, runde, schwere);
 
-                        switch (runde)
-                        {
-                            case 5:
-                                runde = 25;
-                                gesamtPunkte1 = punkte1 * 20;
-                                gesamtPunkte2 = punkte2 * 20;
-                                break;
-                            case 25:
-                                runde = 100;
-                                gesamtPunkte1 = punkte1 * 4;
-                                gesamtPunkte2 = punkte2 * 4;
-                                break;
-                            case 100:
-                                gesamtPunkte1 += punkte1;
-                                gesamtPunkte2 += punkte2;
-                                break;
-                        }
+                    switch (runde)
+                    {
+                        //beim ersten Durchlauf (5R) werden die erreichten Punkte mal 20 gerechnet und auf die gesamtPunktzahl addiert
+                        case 5:
+                            runde = 25;
+                            gesamtPunkte1 += punkte1;
+                            gesamtPunkte2 += punkte2;
+                            break;
+                        //beim zweiten Durchlauf (25R) werden die erreichten Punkte mal 4 gerechnet und auf die gesamtPunktzahl addiert
+                        case 25:
+                            runde = 100;
+                            gesamtPunkte1 += punkte1;
+                            gesamtPunkte2 += punkte2;
+                            break;
+                        //beim dritten Durchlauf werden die erreichten Punkte auf die Gesamtpunktzahl addiert
+                        case 100:
+                            runde = 0;
+                            gesamtPunkte1 += punkte1;
+                            gesamtPunkte2 += punkte2;
+                            break;
                     }
-                    schwere++;
+                }
+                schwere++;
             }
             
             
@@ -260,8 +423,27 @@ namespace Gefangenendilemma
             BasisStrategie strategie2 = _strategien[st2];
             Console.WriteLine("---------------------------------------------------");
             Console.WriteLine();
-            Console.WriteLine($"{strategie1.Name()} hat {gesamtPunkte1} Punkte erhalten.");
-            Console.WriteLine($"{strategie2.Name()} hat {gesamtPunkte2} Punkte erhalten.");
+            Console.WriteLine($"{strategie1.Name()} hat insgesamt {gesamtPunkte1} Punkte erhalten.");
+            Console.WriteLine($"{strategie2.Name()} hat insgesamt {gesamtPunkte2} Punkte erhalten.");
+            Console.WriteLine("Somit hat {0} gewonnen.", gesamtPunkte1 < gesamtPunkte2 ? strategie1.Name() : strategie2.Name());
+            Console.WriteLine();
+        }
+
+        static void MenschGegenMaschine()
+        {
+            int maschine;
+            int runde, schwere;
+
+            Console.Clear();
+            Console.WriteLine("Willkommen bei Mensch vs. Maschine.");
+            for( int i = 0; i < _strategien.Count; i++)
+            {
+                Console.WriteLine($"{i} - {_strategien[i].Name()}");
+            }
+
+            maschine = VerwaltungKram.EingabeZahlMinMax("Wählen Sie die Strategie ihres Gegners aus", 0, _strategien.Count);
+            runde = VerwaltungKram.EingabeZahlMinMax("Wie viele Runden sollen verhört werden?", 1, 101);
+            schwere = VerwaltungKram.EingabeZahlMinMax("Wie schwer sind die Verstöße? (0=leicht, 1=mittel, 2=schwer)", 0, 3);
         }
         
     }
