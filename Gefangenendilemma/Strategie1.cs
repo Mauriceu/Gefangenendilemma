@@ -17,7 +17,7 @@ namespace Gefangenendilemma
 
         public override string Name()
         {
-            return "TFT";
+            return "Reaktives TFT";
         }
 
         public override string Autor()
@@ -67,7 +67,12 @@ namespace Gefangenendilemma
                 ownReactions.Add(Verrat);
                 return Verrat;
             }
-            
+
+            if (ownReactions.Count == 0)
+            {
+                ownReactions.Add(Verrat);
+                return Verrat;
+            }
             ownReactions.Add(Kooperieren);
             return Kooperieren;
 
