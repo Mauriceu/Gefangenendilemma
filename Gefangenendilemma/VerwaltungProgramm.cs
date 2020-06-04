@@ -12,6 +12,7 @@ namespace Gefangenendilemma
         private static List<BasisStrategie> _strategien;
 
         private static int punkte1, punkte2, gesamtPunkte1, gesamtPunkte2;
+        private static bool automatischesVerhoer = false;
 
         static void Main(string[] args)
         {
@@ -59,6 +60,8 @@ namespace Gefangenendilemma
             int st1, st2;
             int runde, schwere;
 
+            automatischesVerhoer = false;
+            
             Console.WriteLine("Willkommen zum Verhör zwischen 2 Strategien");
             for (int i = 0; i < _strategien.Count; i++)
             {
@@ -93,7 +96,7 @@ namespace Gefangenendilemma
             strategie1.Start(runde, schwere);
             strategie2.Start(runde, schwere);
             
-            Console.WriteLine($"Verhör zwischen {strategie1.Name()} und {strategie2.Name()} für {runde} Runden.");
+            Console.WriteLine($"Verhör zwischen {strategie1.Name()} und {strategie2.Name()} für {runde} Runden und Schwierigkeit {schwere}.");
 
 
             //start
@@ -123,6 +126,21 @@ namespace Gefangenendilemma
             }
 
             //ausgabe
+            if (automatischesVerhoer)
+            {
+                switch (runde)
+                {
+                    case 5:
+                        punkte1 *= 20;
+                        punkte2 *= 20;
+                        break;
+                    case 25:
+                        punkte1 *= 4;
+                        punkte2 *= 4;
+                        break;
+                }
+            }
+            
             Console.WriteLine();
             Console.WriteLine($"{strategie1.Name()} hat {punkte1} Punkte erhalten.");
             Console.WriteLine($"{strategie2.Name()} hat {punkte2} Punkte erhalten.");
@@ -214,6 +232,10 @@ namespace Gefangenendilemma
             //0=leicht, 1=mittel, 2=schwer
             int schwere = 0;
 
+            automatischesVerhoer = true;
+
+            gesamtPunkte1 = 0;
+            gesamtPunkte2 = 0;
             
             Console.WriteLine("Willkommen zum Verhör zwischen 2 Strategien");
             for (int i = 0; i < _strategien.Count; i++)
@@ -246,14 +268,14 @@ namespace Gefangenendilemma
                         //beim ersten Durchlauf (5R) werden die erreichten Punkte mal 20 gerechnet und auf die gesamtPunktzahl addiert
                         case 5:
                             runde = 25;
-                            gesamtPunkte1 += punkte1 * 20;
-                            gesamtPunkte2 += punkte2 * 20;
+                            gesamtPunkte1 += punkte1;
+                            gesamtPunkte2 += punkte2;
                             break;
                         //beim zweiten Durchlauf (25R) werden die erreichten Punkte mal 4 gerechnet und auf die gesamtPunktzahl addiert
                         case 25:
                             runde = 100;
-                            gesamtPunkte1 += punkte1 * 4;
-                            gesamtPunkte2 += punkte2 * 4;
+                            gesamtPunkte1 += punkte1;
+                            gesamtPunkte2 += punkte2;
                             break;
                         //beim dritten Durchlauf werden die erreichten Punkte auf die Gesamtpunktzahl addiert
                         case 100:
