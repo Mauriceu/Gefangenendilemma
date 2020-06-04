@@ -35,10 +35,11 @@ namespace Gefangenendilemma
 
         public override int Verhoer(int letzteReaktion)
         {
-            if ()
+            if (schwere == 1)
             {
-
+                return Kooperieren;
             }
+            return Verrat;
         }
     }
 }
