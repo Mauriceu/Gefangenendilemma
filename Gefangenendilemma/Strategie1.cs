@@ -10,10 +10,10 @@ namespace Gefangenendilemma
 
     public class Strategie1 : BasisStrategie
     {
-        public int runden;
-        public int schwere;
-        public List<int> enemyReactions = new List<int>();
-        public List<int> ownReactions = new List<int>();
+        private int runden;
+        private int schwere;
+        private List<int> enemyReactions = new List<int>();
+        private List<int> ownReactions = new List<int>();
 
         public override string Name()
         {
@@ -33,7 +33,6 @@ namespace Gefangenendilemma
             
             enemyReactions = new List<int>();
             ownReactions = new List<int>();
-            
         }
 
         public override int Verhoer(int letzteReaktion)
@@ -75,10 +74,9 @@ namespace Gefangenendilemma
 
             if (unterschiede.Count < 5 && runden == 100 && enemyReactions.Count > 30)
             {
-                Console.WriteLine("testorino brudi");
-                ownReactions.Add(Verrat);
+                ownReactions.Add(Kooperieren);
                 return Kooperieren;
-            } 
+            }
 
             ownReactions.Add(Verrat);
             return Verrat;
