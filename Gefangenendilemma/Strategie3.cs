@@ -12,11 +12,7 @@ namespace Gefangenendilemma
     /// </summary>
     public class Strategie3 : BasisStrategie
     {
-        private int runden;
         private int schwere;
-        private List<int> enemyReactions = new List<int>();
-        private List<int> ownReactions = new List<int>();
-        private bool antiVerrat;
         public override string Name()
         {
             return "Anti-Verrat";
