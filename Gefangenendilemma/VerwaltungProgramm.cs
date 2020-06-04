@@ -48,7 +48,7 @@ namespace Gefangenendilemma
                         AutomatischerVerhoerer();
                         break;
                     case "2":
-                        //Benutzer gegen Computer
+                        MenschGegenMaschine();
                         break;
                     default:
                         Console.WriteLine($"Eingabe {eingabe} nicht erkannt.");
@@ -56,7 +56,7 @@ namespace Gefangenendilemma
                 }
             } while (!"x".Equals(eingabe?.ToLower()));
         }
-
+        
         static void Gefangene2()
         {
             int st1, st2;
@@ -299,6 +299,11 @@ namespace Gefangenendilemma
             Console.WriteLine($"{strategie2.Name()} hat insgesamt {gesamtPunkte2} Punkte erhalten.");
             Console.WriteLine("Somit hat {0} gewonnen.", gesamtPunkte1 < gesamtPunkte2 ? strategie1.Name() : strategie2.Name());
             Console.WriteLine();
+        }
+
+        static void MenschGegenMaschine()
+        {
+
         }
         
     }
