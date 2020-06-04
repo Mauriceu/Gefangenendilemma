@@ -69,7 +69,7 @@ namespace Gefangenendilemma
             st1 = VerwaltungKram.EingabeZahlMinMax("Wählen Sie die 1. Strategie", 0, _strategien.Count);
             st2 = VerwaltungKram.EingabeZahlMinMax("Wählen Sie die 2. Strategie", 0, _strategien.Count);
             runde = VerwaltungKram.EingabeZahlMinMax("Wie viele Runden sollen diese verhört werden?", 1, 101);
-            schwere = VerwaltungKram.EingabeZahlMinMax("Wie schwer sind die Verstöße? (2=schwer)", 0, 3);
+            schwere = VerwaltungKram.EingabeZahlMinMax("Wie schwer sind die Verstöße? (0=leicht, 1=mittel, 2=schwer)", 0, 3);
 
             Verhoer(st1, st2, runde, schwere);
         }
@@ -211,9 +211,10 @@ namespace Gefangenendilemma
 
         static void AutomatischerVerhoerer()
         {
-            int st1, st2;
+            //0=leicht, 1=mittel, 2=schwer
             int schwere = 0;
 
+            
             Console.WriteLine("Willkommen zum Verhör zwischen 2 Strategien");
             for (int i = 0; i < _strategien.Count; i++)
             {
@@ -221,31 +222,40 @@ namespace Gefangenendilemma
             }
 
             Console.WriteLine("Wählen Sie ihre 2 Gefangene:");
-            st1 = VerwaltungKram.EingabeZahlMinMax("Wählen Sie die 1. Strategie", 0, _strategien.Count);
-            st2 = VerwaltungKram.EingabeZahlMinMax("Wählen Sie die 2. Strategie", 0, _strategien.Count);
+            int st1 = VerwaltungKram.EingabeZahlMinMax("Wählen Sie die 1. Strategie", 0, _strategien.Count);
+            int st2 = VerwaltungKram.EingabeZahlMinMax("Wählen Sie die 2. Strategie", 0, _strategien.Count);
 
+            //für jeden Schwierigkeitsgrad 1 Durchlauf
             for (int a = 0; a < 3; a++)
             {
+                //beginnt mit 5 Runden
                 int runde = 5;
                 
+                    //jewils 1 Durchlauf für 5, 25, 100 Runden
                     for (int b = 0; b < 3; b++)
                     {
+                        //setzt Punkte zurück
                         punkte1 = 0;
                         punkte2 = 0;
+                        
+                        //startet das Verhoer
                         Verhoer(st1, st2, runde, schwere);
 
                         switch (runde)
                         {
+                            //beim ersten Durchlauf (5R) werden die erreichten Punkte mal 20 gerechnet
                             case 5:
                                 runde = 25;
                                 gesamtPunkte1 = punkte1 * 20;
                                 gesamtPunkte2 = punkte2 * 20;
                                 break;
+                            //beim zweiten Durchlauf (25R) werden die erreichten Punkte mal 4 gerechnet
                             case 25:
                                 runde = 100;
                                 gesamtPunkte1 = punkte1 * 4;
                                 gesamtPunkte2 = punkte2 * 4;
                                 break;
+                            //beim dritten Durchlauf werden die erreichten Punkte auf die Gesamtpunktzahl addiert
                             case 100:
                                 runde = 0;
                                 gesamtPunkte1 += punkte1;
