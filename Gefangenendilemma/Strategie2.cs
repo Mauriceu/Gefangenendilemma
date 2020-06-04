@@ -28,15 +28,12 @@ namespace Gefangenendilemma
 
         public override int Verhoer(int letzteReaktion)
         {
-            //Strategie hier ergänzen
-            Random num = new Random();
-            int ran = num.Next(0, 100);
-            
-            if (ran > 50)
+            if (schwere == 1)
             {
-                return Verrat;
+                return Kooperieren;
             }
-            return Kooperieren;
+
+            return Verrat;
         }
     }
 }
