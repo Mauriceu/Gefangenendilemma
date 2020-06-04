@@ -262,13 +262,13 @@ namespace Gefangenendilemma
             }
             
             
-            for (int y = 0; y < _strategien.Count; y++)
+            for (int x = 0; x < _strategien.Count; x++)
             {
-                st1 = y;
+                st1 = x;
 
-                for (int x = 1; x < _strategien.Count - y; x++)
+                for (int y = 1; y < _strategien.Count - x; y++)
                 {
-                    st2 = x + y;
+                    st2 = y + x;
                     schwere = 0;
 
                     //für jeden Schwierigkeitsgrad 1 Durchlauf
