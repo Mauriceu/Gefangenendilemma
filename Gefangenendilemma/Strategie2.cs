@@ -7,9 +7,12 @@ namespace Gefangenendilemma
 
     public class Strategie2 : BasisStrategie
     {
+        private int schwere;
+        private int runden;
+
         public override string Name()
         {
-            return "Testeroni";
+            return "Anti-Groll-und-Verrate-Immer";
         }
 
         public override string Autor()
