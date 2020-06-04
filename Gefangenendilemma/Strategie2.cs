@@ -7,12 +7,10 @@ namespace Gefangenendilemma
 
     public class Strategie2 : BasisStrategie
     {
-        private int schwere;
-        private int runden;
 
         public override string Name()
         {
-            return "Anti-Groll-und-Verrate-Immer";
+            return "Benutzereingabe";
         }
 
         public override string Autor()
@@ -22,18 +20,40 @@ namespace Gefangenendilemma
 
         public override void Start(int runden, int schwere)
         {
-            this.schwere = schwere;
-            this.runden = runden;
+            Console.Clear();
         }
 
         public override int Verhoer(int letzteReaktion)
         {
-            if (schwere == 1)
-            {
-                return Kooperieren;
-            }
 
-            return Verrat;
+            Console.Write("Ihr Gegner hat in der letzten Runde ");
+            switch(letzteReaktion)
+            {
+                case -1:
+                    Console.WriteLine("noch nichts ausgewählt.");
+                    break;
+                case 0:
+                    Console.WriteLine("kooperieren ausgewählt.");
+                    break;
+                case 1:
+                    Console.WriteLine("verrat ausgewählt.");
+                    break;
+            }
+            Console.WriteLine("Was möchten Sie als nächstes tun? (0 = kooperieren; 1 = verraten)");
+
+            while ( true )
+            {
+                switch (Console.ReadLine())
+                {
+                    case "0":
+                        return Kooperieren;
+                    case "1":
+                        return Verrat;
+                    default:
+                        Console.WriteLine("Ungültige Eingabe. Bitte geben Sie 0 [kooperieren] oder 1 [verrat] als Antwort ein.");
+                        break;
+                }
+            }
         }
     }
 }
