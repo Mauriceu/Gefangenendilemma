@@ -231,39 +231,39 @@ namespace Gefangenendilemma
                 //beginnt mit 5 Runden
                 int runde = 5;
                 
-                    //jewils 1 Durchlauf für 5, 25, 100 Runden
-                    for (int b = 0; b < 3; b++)
-                    {
-                        //setzt Punkte zurück
-                        punkte1 = 0;
-                        punkte2 = 0;
-                        
-                        //startet das Verhoer
-                        Verhoer(st1, st2, runde, schwere);
+                //jewils 1 Durchlauf für 5, 25, 100 Runden
+                for (int b = 0; b < 3; b++)
+                {
+                    //setzt Punkte zurück
+                    punkte1 = 0;
+                    punkte2 = 0;
+                    
+                    //startet das Verhoer
+                    Verhoer(st1, st2, runde, schwere);
 
-                        switch (runde)
-                        {
-                            //beim ersten Durchlauf (5R) werden die erreichten Punkte mal 20 gerechnet
-                            case 5:
-                                runde = 25;
-                                gesamtPunkte1 = punkte1 * 20;
-                                gesamtPunkte2 = punkte2 * 20;
-                                break;
-                            //beim zweiten Durchlauf (25R) werden die erreichten Punkte mal 4 gerechnet
-                            case 25:
-                                runde = 100;
-                                gesamtPunkte1 = punkte1 * 4;
-                                gesamtPunkte2 = punkte2 * 4;
-                                break;
-                            //beim dritten Durchlauf werden die erreichten Punkte auf die Gesamtpunktzahl addiert
-                            case 100:
-                                runde = 0;
-                                gesamtPunkte1 += punkte1;
-                                gesamtPunkte2 += punkte2;
-                                break;
-                        }
+                    switch (runde)
+                    {
+                        //beim ersten Durchlauf (5R) werden die erreichten Punkte mal 20 gerechnet und auf die gesamtPunktzahl addiert
+                        case 5:
+                            runde = 25;
+                            gesamtPunkte1 += punkte1 * 20;
+                            gesamtPunkte2 += punkte2 * 20;
+                            break;
+                        //beim zweiten Durchlauf (25R) werden die erreichten Punkte mal 4 gerechnet und auf die gesamtPunktzahl addiert
+                        case 25:
+                            runde = 100;
+                            gesamtPunkte1 += punkte1 * 4;
+                            gesamtPunkte2 += punkte2 * 4;
+                            break;
+                        //beim dritten Durchlauf werden die erreichten Punkte auf die Gesamtpunktzahl addiert
+                        case 100:
+                            runde = 0;
+                            gesamtPunkte1 += punkte1;
+                            gesamtPunkte2 += punkte2;
+                            break;
                     }
-                    schwere++;
+                }
+                schwere++;
             }
             
             
@@ -271,8 +271,9 @@ namespace Gefangenendilemma
             BasisStrategie strategie2 = _strategien[st2];
             Console.WriteLine("---------------------------------------------------");
             Console.WriteLine();
-            Console.WriteLine($"{strategie1.Name()} hat {gesamtPunkte1} Punkte erhalten.");
-            Console.WriteLine($"{strategie2.Name()} hat {gesamtPunkte2} Punkte erhalten.");
+            Console.WriteLine($"{strategie1.Name()} hat insgesamt {gesamtPunkte1} Punkte erhalten.");
+            Console.WriteLine($"{strategie2.Name()} hat insgesamt {gesamtPunkte2} Punkte erhalten.");
+            Console.WriteLine("Somit hat {0} gewonnen.", gesamtPunkte1 < gesamtPunkte2 ? strategie1.Name() : strategie2.Name());
             Console.WriteLine();
         }
         

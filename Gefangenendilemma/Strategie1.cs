@@ -54,7 +54,7 @@ namespace Gefangenendilemma
                 
                 if (letzteReaktion == Kooperieren)
                 {
-                    //eigene Reaktionen werden größtenteils nicht imitiert
+                    //wenn die eigenen Reaktionen größtenteils nicht imitiert werden
                     if (enemyReactions.Except(ownReactions).ToList().Count < 5 && runden > 5 )
                     {
                         ownReactions.Add(Verrat);
@@ -67,12 +67,12 @@ namespace Gefangenendilemma
                 
                 ownReactions.Add(Verrat);
                 return Verrat;
-                
             }
 
-            var unterschiede = enemyReactions.Except(ownReactions).ToList();
 
-            if (unterschiede.Count < 5 && runden == 100 && enemyReactions.Count > 30)
+            var unterschiede = enemyReactions.Except(ownReactions).ToList();
+            
+            if (unterschiede.Count < 5 && runden == 100 && enemyReactions.Count > 20)
             {
                 ownReactions.Add(Kooperieren);
                 return Kooperieren;
