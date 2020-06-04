@@ -247,6 +247,7 @@ namespace Gefangenendilemma
                                 gesamtPunkte2 = punkte2 * 4;
                                 break;
                             case 100:
+                                runde = 0;
                                 gesamtPunkte1 += punkte1;
                                 gesamtPunkte2 += punkte2;
                                 break;
@@ -262,6 +263,7 @@ namespace Gefangenendilemma
             Console.WriteLine();
             Console.WriteLine($"{strategie1.Name()} hat {gesamtPunkte1} Punkte erhalten.");
             Console.WriteLine($"{strategie2.Name()} hat {gesamtPunkte2} Punkte erhalten.");
+            Console.WriteLine();
         }
         
     }
