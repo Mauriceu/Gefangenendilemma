@@ -1,3 +1,8 @@
+using System;
+using System.Buffers;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Gefangenendilemma.Basis;
 
 namespace Gefangenendilemma
@@ -7,6 +12,10 @@ namespace Gefangenendilemma
     /// </summary>
     public class Strategie3 : BasisStrategie
     {
+        private int runden;
+        private int schwere;
+        private List<int> enemyReactions = new List<int>();
+        private List<int> ownReactions = new List<int>();
         private bool antiVerrat;
         public override string Name()
         {
@@ -20,12 +29,16 @@ namespace Gefangenendilemma
 
         public override void Start(int runde, int schwere)
         {
-            antiVerrat = false;
+            this.schwere = schwere;
+            
         }
 
         public override int Verhoer(int letzteReaktion)
         {
-            
+            if ()
+            {
+
+            }
         }
     }
 }
