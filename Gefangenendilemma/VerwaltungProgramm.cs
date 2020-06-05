@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using Gefangenendilemma.Basis;
 
@@ -13,8 +12,8 @@ namespace Gefangenendilemma
         /// </summary>
         private static List<BasisStrategie> _strategien;
 
-        private static int punkte1, punkte2, gesamtPunkte1, gesamtPunkte2;
-        private static bool automatischesVerhoer = false;
+        private static int punkte1, punkte2, gesamtPunkte1, gesamtPunkte2, schwere, runde;
+        private static bool automatischesVerhoer;
 
         static void Main(string[] args)
         {
@@ -25,6 +24,7 @@ namespace Gefangenendilemma
             _strategien.Add(new Strategie1());
             _strategien.Add(new Strategie2());
             _strategien.Add(new Strategie3());
+            _strategien.Add(new Strategie4());
 
             string eingabe = null;
             do
@@ -66,7 +66,6 @@ namespace Gefangenendilemma
         static void Gefangene2()
         {
             int st1, st2;
-            int runde, schwere;
 
             automatischesVerhoer = false;
             
@@ -103,8 +102,6 @@ namespace Gefangenendilemma
             //beide Strategien über den Start informieren (Also es wird die Startmethode aufgerufen)
             strategie1.Start(runde, schwere);
             strategie2.Start(runde, schwere);
-            
-            Console.WriteLine($"Verhör zwischen '{strategie1.Name()}' und '{strategie2.Name()}' für {runde} Runden und Schwierigkeit {schwere}.");
 
 
             //start
@@ -247,14 +244,10 @@ namespace Gefangenendilemma
             Console.WriteLine();
 
             automatischesVerhoer = true;
-            
-            //0=leicht, 1=mittel, 2=schwer
-            int schwere = 0;
 
             int st1 = 0, st2 = 0;
 
 
-            
             var punkte = new Dictionary<string, int>();
             foreach (var str in _strategien)
             {
@@ -275,9 +268,9 @@ namespace Gefangenendilemma
                     for (int a = 0; a < 3; a++)
                     {
                         //beginnt mit 5 Runden
-                        int runde = 5;
+                        runde = 5;
 
-                        //jewils 1 Durchlauf für 5, 25, 100 Runden
+                        //jeweils 1 Durchlauf für 5, 25, 100 Runden
                         for (int b = 0; b < 3; b++)
                         {
                             //setzt Punkte zurück
@@ -301,25 +294,30 @@ namespace Gefangenendilemma
                             {
                                 //beim ersten Durchlauf (5R) werden die erreichten Punkte mal 20 gerechnet und auf die gesamtPunktzahl addiert
                                 case 5:
-                                    runde = 25;
+
                                     punkte[strategie1] += punkte1;
                                     punkte[strategie2] += punkte2;
+
+                                    TurnierAusgabe(strategie1, strategie2);
+
+                                    runde = 25;
                                     break;
                                 //beim zweiten Durchlauf (25R) werden die erreichten Punkte mal 4 gerechnet und auf die gesamtPunktzahl addiert
                                 case 25:
-                                    runde = 100;
+
                                     punkte[strategie1] += punkte1;
                                     punkte[strategie2] += punkte2;
+
+                                    TurnierAusgabe(strategie1, strategie2);
+
+                                    runde = 100;
                                     break;
                                 //beim dritten Durchlauf werden die erreichten Punkte auf die Gesamtpunktzahl addiert
                                 case 100:
-                                    runde = 0;
                                     punkte[strategie1] += punkte1;
                                     punkte[strategie2] += punkte2;
-                                    
-                                    Console.WriteLine($"{strategie1} hat {punkte1} Punkte, {strategie2} hat {punkte2} Punkte erreicht.");
-                                    Console.WriteLine("Somit hat {0} gewonnen.", punkte1 < punkte2 ? strategie1 : strategie2);
-                                    Console.WriteLine("*********************************************************************************");
+
+                                    TurnierAusgabe(strategie1, strategie2);
                                     break;
                             }
                         }
@@ -355,7 +353,17 @@ namespace Gefangenendilemma
             Console.WriteLine($"{best} hat gewonnen");
             Console.WriteLine("-------------------------------------------------------");
         }
-        
+
+        public static void TurnierAusgabe(string stat1, string stat2)
+        {
+
+            Console.WriteLine($"Runden: {runde}, Schwierigkeit: {schwere}");
+            Console.WriteLine($"'{stat1}' erreichte {punkte1} Punkte.");
+            Console.WriteLine($"'{stat2}' erreichte {punkte2} Punkte.");
+            Console.WriteLine("Somit hat '{0}' gewonnen.", punkte1 < punkte2 ? stat1 : stat2);
+            Console.WriteLine("*********************************************************************************");
+
+        }
 
         static void AutomatischerVerhoerer()
         {
