@@ -1,8 +1,4 @@
-using System;
-using System.Buffers;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using Gefangenendilemma.Basis;
 
 namespace Gefangenendilemma
@@ -58,14 +54,14 @@ namespace Gefangenendilemma
                     return Verrat;
                 }
 
-                if (enemyReactions.FindAll(item => item == Verrat).Count == 0 && enemyReactions.Count > 1)
+                if (enemyReactions.FindAll(item => item == Kooperieren).Count == 0 && enemyReactions.Count > 1)
                 {
-                    ownReactions.Add(Kooperieren);
-                    return Kooperieren;
+                    ownReactions.Add(Verrat);
+                    return Verrat;
                 }
                 
-                ownReactions.Add(Verrat);
-                return Verrat;
+                ownReactions.Add(Kooperieren);
+                return Kooperieren;
             }
 
             if (ownReactions.Count == 0)
