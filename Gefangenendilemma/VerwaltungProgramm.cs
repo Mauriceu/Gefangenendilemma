@@ -442,6 +442,8 @@ namespace Gefangenendilemma
                 Console.WriteLine($"{i} - {_strategien[i].Name()}");
             }
 
+
+
             maschine = VerwaltungKram.EingabeZahlMinMax("Wählen Sie die Strategie ihres Gegners aus", 0, _strategien.Count);
             runde = VerwaltungKram.EingabeZahlMinMax("Wie viele Runden sollen verhört werden?", 1, 101);
             schwere = VerwaltungKram.EingabeZahlMinMax("Wie schwer sind die Verstöße? (0=leicht, 1=mittel, 2=schwer)", 0, 3);
