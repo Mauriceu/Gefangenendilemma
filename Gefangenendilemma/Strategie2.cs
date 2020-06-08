@@ -38,7 +38,6 @@ namespace Gefangenendilemma
         /// <param name="schwere"></param>
         public override void Start(int runden, int schwere)
         {
-            Console.Clear();
             this.rundencounter = 0;
             this.runden = runden;
             this.schwere = schwere;
