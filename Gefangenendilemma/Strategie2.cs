@@ -8,7 +8,7 @@ namespace Gefangenendilemma
     public class Strategie2 : BasisStrategie
     {
         // Setzen von Attributen der Klasse
-        private int rundencounter = 0;
+        private int rundencounter;
         private int runden;
         private int schwere;
 
@@ -39,6 +39,7 @@ namespace Gefangenendilemma
         public override void Start(int runden, int schwere)
         {
             Console.Clear();
+            this.rundencounter = 0;
             this.runden = runden;
             this.schwere = schwere;
         }
