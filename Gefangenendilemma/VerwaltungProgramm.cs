@@ -24,7 +24,10 @@ namespace Gefangenendilemma
             _strategien.Add(new Strategie1());
             _strategien.Add(new Strategie2());
             _strategien.Add(new Strategie3());
+            // Mensch vs Maschine
             _strategien.Add(new Strategie4());
+
+
 
             string eingabe = null;
             do
@@ -66,6 +69,10 @@ namespace Gefangenendilemma
         static void Gefangene2()
         {
             int st1, st2;
+
+            // Punkte reset
+            punkte1 = 0;
+            punkte2 = 0;
 
             automatischesVerhoer = false;
             
