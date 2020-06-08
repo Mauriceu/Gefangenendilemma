@@ -24,7 +24,10 @@ namespace Gefangenendilemma
             _strategien.Add(new Strategie1());
             _strategien.Add(new Strategie2());
             _strategien.Add(new Strategie3());
+            // Mensch vs Maschine
             _strategien.Add(new Strategie4());
+
+
 
             string eingabe = null;
             do
@@ -66,6 +69,10 @@ namespace Gefangenendilemma
         static void Gefangene2()
         {
             int st1, st2;
+
+            // Punkte reset
+            punkte1 = 0;
+            punkte2 = 0;
 
             automatischesVerhoer = false;
             
@@ -130,22 +137,8 @@ namespace Gefangenendilemma
                 reaktion2 = aktReaktion2;
             }
 
-            //ausgabe
-            if (automatischesVerhoer)
-            {
-                switch (runde)
-                {
-                    case 5:
-                        punkte1 *= 20;
-                        punkte2 *= 20;
-                        break;
-                    case 25:
-                        punkte1 *= 4;
-                        punkte2 *= 4;
-                        break;
-                }
-            }
-            else
+            //ausgabe (mit if, um die Ausgabe bei Turnier()/AutomatischerVerhoerer() sauberer zu halten)
+            if (!automatischesVerhoer)
             {
                 Console.WriteLine();
                 Console.WriteLine($"{strategie1.Name()} hat {punkte1} Punkte erhalten.");
@@ -248,19 +241,23 @@ namespace Gefangenendilemma
             int st1 = 0, st2 = 0;
 
 
+            // erstelle dictionary mit key->value "strategieName": "punkte"
             var punkte = new Dictionary<string, int>();
             foreach (var str in _strategien)
             {
                 punkte.Add(str.Name(), 0);
             }
             
-            
+            // Durchlauf für jede Strategie
             for (int x = 0; x < _strategien.Count; x++)
             {
+                // strategie1 wird gesetzt
                 st1 = x;
 
+                // Durchlauf jeder Strategie, die nach _strategien[x] kommt
                 for (int y = 1; y < _strategien.Count - x; y++)
                 {
+                    // strategie2 wird gesetzt
                     st2 = y + x;
                     schwere = 0;
 
@@ -270,50 +267,47 @@ namespace Gefangenendilemma
                         //beginnt mit 5 Runden
                         runde = 5;
 
+
                         //jeweils 1 Durchlauf für 5, 25, 100 Runden
                         for (int b = 0; b < 3; b++)
                         {
-                            //setzt Punkte zurück
+                            //Reset für rundenPunkte
                             punkte1 = 0;
                             punkte2 = 0;
 
+                            // Speichere Namen der aktuellen Strategien
                             string strategie1 = _strategien[st1].Name();
                             string strategie2 = _strategien[st2].Name();
 
                             //startet das Verhoer
                             Verhoer(st1, st2, runde, schwere);
-                            
-                            var strat1 = from val in punkte where val.Key == "strategie1" select val.Value;
-                            var strat2 = from val in punkte where val.Key == "strategie2" select val.Value;
-                            
-                            
-                            foreach( var strat in strat1 )Console.WriteLine("strat1 " + strat);
-                            
-                            
+
+
                             switch (runde)
                             {
                                 //beim ersten Durchlauf (5R) werden die erreichten Punkte mal 20 gerechnet und auf die gesamtPunktzahl addiert
                                 case 5:
+                                    PunkteAnpassen(ref runde);
 
                                     punkte[strategie1] += punkte1;
                                     punkte[strategie2] += punkte2;
 
                                     TurnierAusgabe(strategie1, strategie2);
-
                                     runde = 25;
                                     break;
                                 //beim zweiten Durchlauf (25R) werden die erreichten Punkte mal 4 gerechnet und auf die gesamtPunktzahl addiert
                                 case 25:
+                                    PunkteAnpassen(ref runde);
 
                                     punkte[strategie1] += punkte1;
                                     punkte[strategie2] += punkte2;
 
                                     TurnierAusgabe(strategie1, strategie2);
-
                                     runde = 100;
                                     break;
                                 //beim dritten Durchlauf werden die erreichten Punkte auf die Gesamtpunktzahl addiert
                                 case 100:
+
                                     punkte[strategie1] += punkte1;
                                     punkte[strategie2] += punkte2;
 
@@ -346,7 +340,7 @@ namespace Gefangenendilemma
                     //speichere den strategie-namen
                     best = value.Key;
                 }
-                Console.WriteLine("{0} hat insgesamt {1} Punkte erhalten.", value.Key, value.Value);
+                Console.WriteLine("'{0}' hat insgesamt {1} Punkte erhalten.", value.Key, value.Value);
             }
             
             Console.WriteLine("-------------------------------------------------------");
@@ -365,6 +359,23 @@ namespace Gefangenendilemma
 
         }
 
+        static void PunkteAnpassen(ref int runde)
+        {
+            switch (runde)
+            {
+                //beim ersten Durchlauf (5R) werden die erreichten Punkte mal 20 gerechnet und auf die Gesamtpunktzahl addiert
+                case 5:
+                    punkte1 *= 20;
+                    punkte2 *= 20;
+                    break;
+                //beim zweiten Durchlauf (25R) werden die erreichten Punkte mal 4 gerechnet und auf die Gesamtpunktzahl addiert
+                case 25:
+                    punkte1 *= 4;
+                    punkte2 *= 4;
+                    break;
+            }
+        }
+
         static void AutomatischerVerhoerer()
         {
             //0=leicht, 1=mittel, 2=schwer
@@ -372,15 +383,20 @@ namespace Gefangenendilemma
 
             automatischesVerhoer = true;
 
+            //reset punkte
             gesamtPunkte1 = 0;
             gesamtPunkte2 = 0;
-            
+
+
             Console.WriteLine("Willkommen zum Verhör zwischen 2 Strategien");
+
+            // Auflistung der Strategien
             for (int i = 0; i < _strategien.Count; i++)
             {
                 Console.WriteLine($"{i} - {_strategien[i].Name()}");
             }
 
+            // Wählen der 2 Strategien
             Console.WriteLine("Wählen Sie ihre 2 Gefangene:");
             int st1 = VerwaltungKram.EingabeZahlMinMax("Wählen Sie die 1. Strategie", 0, _strategien.Count);
             int st2 = VerwaltungKram.EingabeZahlMinMax("Wählen Sie die 2. Strategie", 0, _strategien.Count);
@@ -391,37 +407,21 @@ namespace Gefangenendilemma
                 //beginnt mit 5 Runden
                 int runde = 5;
                 
-                //jewils 1 Durchlauf für 5, 25, 100 Runden
+                //jeweils 1 Durchlauf für 5, 25, 100 Runden
                 for (int b = 0; b < 3; b++)
                 {
-                    //setzt Punkte zurück
+                    //setzt Punkte für jede Runde zurück
                     punkte1 = 0;
                     punkte2 = 0;
                     
                     //startet das Verhoer
                     Verhoer(st1, st2, runde, schwere);
 
-                    switch (runde)
-                    {
-                        //beim ersten Durchlauf (5R) werden die erreichten Punkte mal 20 gerechnet und auf die gesamtPunktzahl addiert
-                        case 5:
-                            runde = 25;
-                            gesamtPunkte1 += punkte1;
-                            gesamtPunkte2 += punkte2;
-                            break;
-                        //beim zweiten Durchlauf (25R) werden die erreichten Punkte mal 4 gerechnet und auf die gesamtPunktzahl addiert
-                        case 25:
-                            runde = 100;
-                            gesamtPunkte1 += punkte1;
-                            gesamtPunkte2 += punkte2;
-                            break;
-                        //beim dritten Durchlauf werden die erreichten Punkte auf die Gesamtpunktzahl addiert
-                        case 100:
-                            runde = 0;
-                            gesamtPunkte1 += punkte1;
-                            gesamtPunkte2 += punkte2;
-                            break;
-                    }
+                    PunkteAnpassen(ref runde);
+
+                    gesamtPunkte1 += punkte1;
+                    gesamtPunkte2 += punkte2;
+
                 }
                 schwere++;
             }
@@ -437,21 +437,108 @@ namespace Gefangenendilemma
             Console.WriteLine();
         }
 
+
         static void MenschGegenMaschine()
         {
             int maschine;
             int runde, schwere;
 
+
             Console.Clear();
             Console.WriteLine("Willkommen bei Mensch vs. Maschine.");
-            for( int i = 0; i < _strategien.Count; i++)
+            for (int i = 0; i < _strategien.Count; i++)
             {
                 Console.WriteLine($"{i} - {_strategien[i].Name()}");
             }
 
+            // Anforderung von Benutzereingaben
             maschine = VerwaltungKram.EingabeZahlMinMax("Wählen Sie die Strategie ihres Gegners aus", 0, _strategien.Count);
             runde = VerwaltungKram.EingabeZahlMinMax("Wie viele Runden sollen verhört werden?", 1, 101);
             schwere = VerwaltungKram.EingabeZahlMinMax("Wie schwer sind die Verstöße? (0=leicht, 1=mittel, 2=schwer)", 0, 3);
+
+            //holt die gewählte Maschinenstrategie aus der Collection.
+            BasisStrategie strategieMaschine = _strategien[maschine];
+            int reaktionMaschine = BasisStrategie.NochNichtVerhoert;
+            int reaktionMensch = BasisStrategie.NochNichtVerhoert;
+
+            //Aufruf der Start-Methode der Maschinenstrategie
+            strategieMaschine.Start(runde, schwere);
+
+            Console.Clear();
+
+            // Start der Verhörung
+            for (int i = 0; i < runde; i++)
+            {
+                Console.Clear();
+                Console.Write("Sie spielen auf");
+
+                switch (schwere)
+                {
+                    case 0:
+                        Console.WriteLine(" leicht.");
+                        break;
+                    case 1:
+                        Console.WriteLine(" mittel.");
+                        break;
+                    case 2:
+                        Console.WriteLine(" schwer");
+                        break;
+                }
+
+                Console.WriteLine("Verbleibende Runden: " + (runde - i - 1));
+
+                switch (reaktionMaschine)
+                {
+                    case 0:
+                        Console.WriteLine("In der letzten Runde hat ihr Gegner kooperiert.");
+                        break;
+                    case 1:
+                        Console.WriteLine("In der letzten Runde hat ihr Gegner verraten.");
+                        break;
+                }
+
+                //beide verhören
+                int aktReaktionMensch = VerwaltungKram.EingabeZahlMinMax("Welche Aktion möchten Sie diese Runde wählen? [0] Kooperieren [1] Verraten", 0, 2);
+                int aktReaktionMaschine = strategieMaschine.Verhoer(reaktionMensch);
+
+
+
+                // Punktberechnung
+                switch (schwere)
+                {
+                    case 0:
+                        Leicht(aktReaktionMaschine, aktReaktionMensch);
+                        break;
+                    case 1:
+                        Mittel(aktReaktionMaschine, aktReaktionMensch);
+                        break;
+                    case 2:
+                        Schwer(aktReaktionMaschine, aktReaktionMensch);
+                        break;
+                }
+
+                // Zuweisung der letzten Reaktion der beiden für den nächsten Durchlauf
+                reaktionMaschine = aktReaktionMaschine;
+                reaktionMensch = aktReaktionMensch;
+            }
+
+            Console.Clear();
+            Console.WriteLine("Punkte der Maschine: " + punkte1);
+            Console.WriteLine("Punkte des Menschen: " + punkte2);
+            if (punkte1 > punkte2)
+            {
+                Console.WriteLine("Der Mensch hat gewonnen!");
+            }
+            else if (punkte2 > punkte1)
+            {
+                Console.WriteLine("Die Maschine hat gewonnen!");
+            }
+            else
+            {
+                Console.WriteLine("Es ist ein Unentschieden!");
+            }
+            Console.Read();
+
         }
         
     }
