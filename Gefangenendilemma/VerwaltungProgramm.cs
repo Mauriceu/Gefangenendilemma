@@ -437,6 +437,9 @@ namespace Gefangenendilemma
             Console.WriteLine();
         }
 
+        /// <summary>
+        /// Der Benutzer kann gegen eine selbst ausgewählte Strategie spielen
+        /// </summary>
         static void MenschGegenMaschine()
         {
             int maschine;
@@ -502,7 +505,7 @@ namespace Gefangenendilemma
 
 
 
-                // Punktberechnung
+                // Punkteberechnung
                 switch (schwere)
                 {
                     case 0:
@@ -524,6 +527,7 @@ namespace Gefangenendilemma
             Console.Clear();
             Console.WriteLine("Punkte der Maschine: " + punkte1);
             Console.WriteLine("Punkte des Menschen: " + punkte2);
+
             if (punkte1 > punkte2)
             {
                 Console.WriteLine("Der Mensch hat gewonnen!");
@@ -536,6 +540,7 @@ namespace Gefangenendilemma
             {
                 Console.WriteLine("Es ist ein Unentschieden!");
             }
+
             Console.Read();
 
         }

@@ -62,6 +62,7 @@ namespace Gefangenendilemma
                     }
 
                     return Kooperieren;
+
                 case 1:
                     if (this.runden == 1)
                     {
@@ -74,6 +75,7 @@ namespace Gefangenendilemma
                     }
 
                     return Kooperieren;
+
                 case 2:
                     if(this.rundencounter == this.runden)
                     {
