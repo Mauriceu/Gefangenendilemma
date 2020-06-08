@@ -442,18 +442,102 @@ namespace Gefangenendilemma
             int maschine;
             int runde, schwere;
 
+
             Console.Clear();
             Console.WriteLine("Willkommen bei Mensch vs. Maschine.");
-            for( int i = 0; i < _strategien.Count; i++)
+            for (int i = 0; i < _strategien.Count; i++)
             {
                 Console.WriteLine($"{i} - {_strategien[i].Name()}");
             }
 
-
-
+            // Anforderung von Benutzereingaben
             maschine = VerwaltungKram.EingabeZahlMinMax("Wählen Sie die Strategie ihres Gegners aus", 0, _strategien.Count);
             runde = VerwaltungKram.EingabeZahlMinMax("Wie viele Runden sollen verhört werden?", 1, 101);
             schwere = VerwaltungKram.EingabeZahlMinMax("Wie schwer sind die Verstöße? (0=leicht, 1=mittel, 2=schwer)", 0, 3);
+
+            //holt die gewählte Maschinenstrategie aus der Collection.
+            BasisStrategie strategieMaschine = _strategien[maschine];
+            int reaktionMaschine = BasisStrategie.NochNichtVerhoert;
+            int reaktionMensch = BasisStrategie.NochNichtVerhoert;
+
+            //Aufruf der Start-Methode der Maschinenstrategie
+            strategieMaschine.Start(runde, schwere);
+
+            Console.Clear();
+
+            // Start der Verhörung
+            for (int i = 0; i < runde; i++)
+            {
+                Console.Clear();
+                Console.Write("Sie spielen auf");
+
+                switch (schwere)
+                {
+                    case 0:
+                        Console.WriteLine(" leicht.");
+                        break;
+                    case 1:
+                        Console.WriteLine(" mittel.");
+                        break;
+                    case 2:
+                        Console.WriteLine(" schwer");
+                        break;
+                }
+
+                Console.WriteLine("Verbleibende Runden: " + (runde - i - 1));
+
+                switch (reaktionMaschine)
+                {
+                    case 0:
+                        Console.WriteLine("In der letzten Runde hat ihr Gegner kooperiert.");
+                        break;
+                    case 1:
+                        Console.WriteLine("In der letzten Runde hat ihr Gegner verraten.");
+                        break;
+                }
+
+                //beide verhören
+                int aktReaktionMensch = VerwaltungKram.EingabeZahlMinMax("Welche Aktion möchten Sie diese Runde wählen? [0] Kooperieren [1] Verraten", 0, 2);
+                int aktReaktionMaschine = strategieMaschine.Verhoer(reaktionMensch);
+
+
+
+                // Punktberechnung
+                switch (schwere)
+                {
+                    case 0:
+                        Leicht(aktReaktionMaschine, aktReaktionMensch);
+                        break;
+                    case 1:
+                        Mittel(aktReaktionMaschine, aktReaktionMensch);
+                        break;
+                    case 2:
+                        Schwer(aktReaktionMaschine, aktReaktionMensch);
+                        break;
+                }
+
+                // Zuweisung der letzten Reaktion der beiden für den nächsten Durchlauf
+                reaktionMaschine = aktReaktionMaschine;
+                reaktionMensch = aktReaktionMensch;
+            }
+
+            Console.Clear();
+            Console.WriteLine("Punkte der Maschine: " + punkte1);
+            Console.WriteLine("Punkte des Menschen: " + punkte2);
+            if (punkte1 > punkte2)
+            {
+                Console.WriteLine("Der Mensch hat gewonnen!");
+            }
+            else if (punkte2 > punkte1)
+            {
+                Console.WriteLine("Die Maschine hat gewonnen!");
+            }
+            else
+            {
+                Console.WriteLine("Es ist ein Unentschieden!");
+            }
+            Console.Read();
+
         }
         
     }
