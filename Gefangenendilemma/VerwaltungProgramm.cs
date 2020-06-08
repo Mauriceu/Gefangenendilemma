@@ -12,8 +12,7 @@ namespace Gefangenendilemma
         /// </summary>
         private static List<BasisStrategie> _strategien;
 
-        private static int gesamtPunkte1, gesamtPunkte2, schwere, runde;
-        private static int punkte1, punkte2 = 0;
+        private static int punkte1, punkte2, gesamtPunkte1, gesamtPunkte2, schwere, runde;
         private static bool automatischesVerhoer;
 
         static void Main(string[] args)
