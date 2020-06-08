@@ -54,7 +54,7 @@ namespace Gefangenendilemma
                     return Verrat;
                 }
 
-                if (enemyReactions.FindAll(item => item == Kooperieren).Count == 0 && enemyReactions.Count > 1)
+                if (enemyReactions.FindAll(item => item == Kooperieren).Count < 2 && enemyReactions.Count > 2)
                 {
                     ownReactions.Add(Verrat);
                     return Verrat;
@@ -69,6 +69,7 @@ namespace Gefangenendilemma
                 ownReactions.Add(Verrat);
                 return Verrat;
             }
+
             ownReactions.Add(Kooperieren);
             return Kooperieren;
 
