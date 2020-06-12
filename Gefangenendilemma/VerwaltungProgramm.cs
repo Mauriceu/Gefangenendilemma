@@ -24,7 +24,7 @@ namespace Gefangenendilemma
             _strategien.Add(new Strategie1());
             _strategien.Add(new Strategie2());
             _strategien.Add(new Strategie3());
-            // Mensch vs Maschine
+            ///Strategie der anderen Gruppe
             _strategien.Add(new Strategie4());
 
 
